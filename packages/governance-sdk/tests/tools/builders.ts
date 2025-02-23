@@ -1,6 +1,7 @@
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
-  Token,
+  getAssociatedTokenAddress,
+  TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import {
@@ -78,7 +79,7 @@ export class BenchBuilder {
     connection?: Connection | undefined,
     programId?: PublicKey | undefined,
   ) {
-    connection = connection ?? new Connection(rpcEndpoint, 'recent');
+    connection = connection ?? new Connection(rpcEndpoint, 'processed');
     programId = programId ?? rpcProgramId;
 
     const programVersion = await getGovernanceProgramVersion(
@@ -121,10 +122,12 @@ export class BenchBuilder {
   async withRealm(
     communityTokenConfig?: GoverningTokenConfigAccountArgs | undefined,
     councilTokenConfig?: GoverningTokenConfigAccountArgs | undefined,
+    useToken2022?: boolean | undefined,
   ) {
     return new RealmBuilder(this).withRealm(
       communityTokenConfig,
       councilTokenConfig,
+      useToken2022
     );
   }
 }
@@ -150,6 +153,7 @@ export class RealmBuilder {
   async withRealm(
     communityTokenConfig?: GoverningTokenConfigAccountArgs | undefined,
     councilTokenConfig?: GoverningTokenConfigAccountArgs | undefined,
+    useToken2022?: boolean | undefined,
   ) {
     const name = `Realm-${new Keypair().publicKey.toBase58().slice(0, 6)}`;
     this.realmAuthorityPk = this.bench.walletPk;
@@ -163,6 +167,7 @@ export class RealmBuilder {
       this.bench.walletPk,
       0,
       this.bench.walletPk,
+      useToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID,
     );
 
     // Create council
@@ -174,6 +179,7 @@ export class RealmBuilder {
       this.bench.walletPk,
       0,
       this.bench.walletPk,
+      useToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID,
     );
 
     const communityMintMaxVoteWeightSource =
@@ -192,6 +198,7 @@ export class RealmBuilder {
       new BN(1),
       communityTokenConfig,
       councilTokenConfig,
+      useToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID,
     );
 
     return this;
@@ -241,12 +248,13 @@ export class RealmBuilder {
     return getRealmConfig(this.bench.connection, realmConfigPk);
   }
 
-  async withCommunityMember() {
+  async withCommunityMember(useToken2022?: boolean | undefined) {
     let ataPk = await withCreateAssociatedTokenAccount(
       this.bench.instructions,
       this.communityMintPk,
       this.bench.walletPk,
       this.bench.walletPk,
+      useToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID,
     );
     await withMintTo(
       this.bench.instructions,
@@ -254,6 +262,7 @@ export class RealmBuilder {
       ataPk,
       this.bench.walletPk,
       1,
+      useToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID,
     );
 
     this.communityOwnerRecordPk = await withDepositGoverningTokens(
@@ -267,17 +276,20 @@ export class RealmBuilder {
       this.bench.walletPk,
       this.bench.walletPk,
       new BN(1),
+      false,
+      useToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID,
     );
 
     return this;
   }
 
-  async withdrawGoverningTokens() {
-    const ataPk = await Token.getAssociatedTokenAddress(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
+  async withdrawGoverningTokens(useToken2022?: boolean | undefined) { 
+    const ataPk = await getAssociatedTokenAddress(
       this.communityMintPk,
       this.bench.walletPk,
+      false,
+      useToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID,
     );
 
     await withWithdrawGoverningTokens(
@@ -288,12 +300,13 @@ export class RealmBuilder {
       ataPk,
       this.communityMintPk,
       this.bench.walletPk,
+      useToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID,
     );
 
     await this.sendTx();
   }
 
-  async revokeGoverningTokens() {
+  async revokeGoverningTokens(useToken2022?: boolean | undefined) {
     await withRevokeGoverningTokens(
       this.bench.instructions,
       this.bench.programId,
@@ -304,6 +317,7 @@ export class RealmBuilder {
       this.communityMintPk,
       this.bench.walletPk,
       new BN(1),
+      useToken2022 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID,
     );
 
     await this.sendTx();

@@ -86,6 +86,7 @@ export function depositInstructionV4(
   poolRewardTokenAccountB: PublicKey,
   // tokenProgramId: PublicKey,
   amount: number,
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID,
 ): TransactionInstruction {
   const dataLayout = struct([u8('instruction'), nu64('amount')]);
 
@@ -99,7 +100,7 @@ export function depositInstructionV4(
     { pubkey: userRewardTokenAccount, isSigner: false, isWritable: true },
     { pubkey: poolRewardTokenAccount, isSigner: false, isWritable: true },
     { pubkey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: true },
-    { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: true },
+    { pubkey: tokenProgram, isSigner: false, isWritable: true },
     { pubkey: userRewardTokenAccountB, isSigner: false, isWritable: true },
     { pubkey: poolRewardTokenAccountB, isSigner: false, isWritable: true },
   ];

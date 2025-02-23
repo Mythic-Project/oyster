@@ -19,6 +19,7 @@ export const withRevokeGoverningTokens = async (
   governingTokenMint: PublicKey,
   revokeAuthority: PublicKey,
   amount: BN,
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID,
 ) => {
   const args = new RevokeGoverningTokensArgs({ amount });
   const data = Buffer.from(
@@ -72,7 +73,7 @@ export const withRevokeGoverningTokens = async (
       isWritable: false,
     },
     {
-      pubkey: TOKEN_PROGRAM_ID,
+      pubkey: tokenProgram,
       isWritable: false,
       isSigner: false,
     },

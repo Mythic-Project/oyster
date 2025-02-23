@@ -14,6 +14,7 @@ export const withWithdrawGoverningTokens = async (
   governingTokenDestination: PublicKey,
   governingTokenMint: PublicKey,
   governingTokenOwner: PublicKey,
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID,
 ) => {
   const args = new WithdrawGoverningTokensArgs();
   const data = Buffer.from(
@@ -62,7 +63,7 @@ export const withWithdrawGoverningTokens = async (
       isSigner: false,
     },
     {
-      pubkey: TOKEN_PROGRAM_ID,
+      pubkey: tokenProgram,
       isWritable: false,
       isSigner: false,
     },

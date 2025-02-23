@@ -21,10 +21,11 @@ import {
 export async function getAssociatedTokenAddress(
   mint: PublicKey,
   owner: PublicKey,
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID,
 ): Promise<PublicKey> {
   return (
     await PublicKey.findProgramAddress(
-      [owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
+      [owner.toBuffer(), tokenProgram.toBuffer(), mint.toBuffer()],
       SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
     )
   )[0];
@@ -37,6 +38,7 @@ export function createTokenAccount(
   mint: PublicKey,
   owner: PublicKey,
   signers: Keypair[],
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID,
 ) {
   const account = createUninitializedTokenAccount(
     instructions,
@@ -46,7 +48,7 @@ export function createTokenAccount(
   );
 
   instructions.push(
-    Token.createInitAccountInstruction(TOKEN_PROGRAM_ID, mint, account, owner),
+    Token.createInitAccountInstruction(tokenProgram, mint, account, owner),
   );
 
   return account;
@@ -57,6 +59,7 @@ export function createUninitializedTokenAccount(
   payer: PublicKey,
   amount: number,
   signers: Keypair[],
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID,
 ) {
   const account = new Keypair();
   instructions.push(
@@ -65,7 +68,7 @@ export function createUninitializedTokenAccount(
       newAccountPubkey: account.publicKey,
       lamports: amount,
       space: AccountLayout.span,
-      programId: TOKEN_PROGRAM_ID,
+      programId: tokenProgram,
     }),
   );
 
@@ -81,6 +84,7 @@ export const withCreateSplTokenAccount = async (
   mint: PublicKey,
   owner: PublicKey,
   payer: PublicKey,
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID,
 ) => {
   const tokenAccountRentExempt = await connection.getMinimumBalanceForRentExemption(
     AccountLayout.span,
@@ -93,6 +97,7 @@ export const withCreateSplTokenAccount = async (
     mint,
     owner,
     signers,
+    tokenProgram
   );
 
   return tokenAccountAddress;

@@ -28,6 +28,7 @@ export const withDepositGoverningTokens = async (
   payer: PublicKey,
   amount: BN,
   governingTokenOwnerIsSigner?: boolean,
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID,
 ) => {
   const args = new DepositGoverningTokensArgs({ amount });
   const data = Buffer.from(
@@ -97,7 +98,7 @@ export const withDepositGoverningTokens = async (
       isSigner: false,
     },
     {
-      pubkey: TOKEN_PROGRAM_ID,
+      pubkey: tokenProgram,
       isWritable: false,
       isSigner: false,
     },

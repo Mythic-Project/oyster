@@ -26,6 +26,7 @@ export const withCreateMintGovernance = async (
   payer: PublicKey,
   governanceAuthority: PublicKey,
   voterWeightRecord?: PublicKey,
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID,
 ) => {
   const args = new CreateMintGovernanceArgs({
     config,
@@ -73,7 +74,7 @@ export const withCreateMintGovernance = async (
       isSigner: true,
     },
     {
-      pubkey: TOKEN_PROGRAM_ID, // 6
+      pubkey: tokenProgram, // 6
       isWritable: false,
       isSigner: false,
     },

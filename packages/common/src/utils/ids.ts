@@ -8,6 +8,10 @@ export let TOKEN_PROGRAM_ID = new PublicKey(
   'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
 );
 
+export let TOKEN_2022_PROGRAM_ID = new PublicKey(
+  'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb',
+);
+
 export let LENDING_PROGRAM_ID = new PublicKey(
   'LendZqTs7gn5CTSJU1jWKhKuVpjJGom45nnwPb2AMTi',
 );
@@ -154,6 +158,7 @@ export const setProgramIds = (envName: string) => {
 export const programIds = () => {
   return {
     token: TOKEN_PROGRAM_ID,
+    token_2022: TOKEN_2022_PROGRAM_ID,
     swap: SWAP_PROGRAM_ID,
     swap_legacy: SWAP_PROGRAM_LEGACY_IDS,
     swapLayout: SWAP_PROGRAM_LAYOUT,

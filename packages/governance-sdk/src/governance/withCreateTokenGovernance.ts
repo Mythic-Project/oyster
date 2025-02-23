@@ -26,6 +26,7 @@ export const withCreateTokenGovernance = async (
   payer: PublicKey,
   governanceAuthority: PublicKey,
   voterWeightRecord?: PublicKey,
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID,
 ) => {
   const args = new CreateTokenGovernanceArgs({
     config,
@@ -77,7 +78,7 @@ export const withCreateTokenGovernance = async (
       isSigner: true,
     },
     {
-      pubkey: TOKEN_PROGRAM_ID,
+      pubkey: tokenProgram,
       isWritable: false,
       isSigner: false,
     },

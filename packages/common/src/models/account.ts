@@ -60,8 +60,8 @@ export function approve(
   // if delegate is not passed ephemeral transfer authority is used
   delegate?: PublicKey,
   existingTransferAuthority?: Account,
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID,
 ): Account {
-  const tokenProgram = TOKEN_PROGRAM_ID;
 
   const transferAuthority = existingTransferAuthority || new Account();
   const delegateKey = delegate ?? transferAuthority.publicKey;

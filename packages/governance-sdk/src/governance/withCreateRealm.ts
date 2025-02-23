@@ -34,6 +34,7 @@ export async function withCreateRealm(
   minCommunityWeightToCreateGovernance: BN,
   communityTokenConfig?: GoverningTokenConfigAccountArgs | undefined,
   councilTokenConfig?: GoverningTokenConfigAccountArgs | undefined,
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID,
 ) {
   const configArgs = createRealmConfigArgs(
     programVersion,
@@ -95,7 +96,7 @@ export async function withCreateRealm(
       isWritable: false,
     },
     {
-      pubkey: TOKEN_PROGRAM_ID,
+      pubkey: tokenProgram,
       isSigner: false,
       isWritable: false,
     },

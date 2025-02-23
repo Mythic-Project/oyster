@@ -1,4 +1,4 @@
-import { MintLayout, Token } from '@solana/spl-token'
+import { createInitializeMintInstruction, MintLayout } from '@solana/spl-token'
 import {
   Connection,
   Keypair,
@@ -16,7 +16,8 @@ export const withCreateMint = async (
   ownerPk: PublicKey,
   freezeAuthorityPk: PublicKey | null,
   decimals: number,
-  payerPk: PublicKey
+  payerPk: PublicKey,
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID
 ) => {
   const mintRentExempt = await connection.getMinimumBalanceForRentExemption(
     MintLayout.span
@@ -30,18 +31,18 @@ export const withCreateMint = async (
       newAccountPubkey: mintAccount.publicKey,
       lamports: mintRentExempt,
       space: MintLayout.span,
-      programId: TOKEN_PROGRAM_ID,
+      programId: tokenProgram,
     })
   )
   signers.push(mintAccount)
 
   instructions.push(
-    Token.createInitMintInstruction(
-      TOKEN_PROGRAM_ID,
+    createInitializeMintInstruction(
       mintAccount.publicKey,
       decimals,
       ownerPk,
-      freezeAuthorityPk
+      freezeAuthorityPk,
+      tokenProgram,
     )
   )
   return mintAccount.publicKey

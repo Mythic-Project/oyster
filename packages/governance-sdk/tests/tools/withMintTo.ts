@@ -1,6 +1,6 @@
-import { Token, u64 } from '@solana/spl-token'
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
 import { TOKEN_PROGRAM_ID } from '../../src/tools/sdk/splToken'
+import { createMintToInstruction } from '@solana/spl-token'
 
 
 
@@ -9,16 +9,17 @@ export const withMintTo = async (
   mintPk: PublicKey,
   destinationPk: PublicKey,
   mintAuthorityPk: PublicKey,
-  amount: number | u64
+  amount: number, 
+  tokenProgram: PublicKey = TOKEN_PROGRAM_ID
 ) => {
   instructions.push(
-    Token.createMintToInstruction(
-      TOKEN_PROGRAM_ID,
+    createMintToInstruction(
       mintPk,
       destinationPk,
       mintAuthorityPk,
+      amount,
       [],
-      amount
+      tokenProgram,
     )
   )
 }
