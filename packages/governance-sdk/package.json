@@ -1,9 +1,9 @@
 {
   "name": "@realms-today/spl-governance",
-  "version": "0.3.32",
+  "version": "0.3.33",
   "description": "SPL Governance Client API",
   "author": "Solana Maintainers <maintainers@solana.foundation>",
-  "homepage": "https://github.com/solana-labs/oyster/blob/main/packages/governance-sdk/README.md",
+  "homepage": "https://github.com/Mythic-Project/oyster/blob/main/packages/governance-sdk/README.md",
   "license": "MIT",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -15,7 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/solana-labs/oyster.git"
+    "url": "git+https://github.com/Mythic-Project/oyster.git"
   },
   "sideEffects": false,
   "scripts": {
@@ -25,7 +25,7 @@
     "watch": "tsc --watch"
   },
   "bugs": {
-    "url": "https://github.com/solana-labs/oyster/issues"
+    "url": "https://github.com/Mythic-Project/oyster/issues"
   },
   "dependencies": {
     "@solana/web3.js": "^1.22.0",
